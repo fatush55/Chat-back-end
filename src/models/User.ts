@@ -2,7 +2,7 @@
 import {Schema, model} from 'mongoose'
 import validator from 'validator'
 // Types
-import { UserType } from 'types/user-type'
+import { UserType } from '../types/user-type'
 
 
 const UserSchema = new Schema({

@@ -1,5 +1,5 @@
 // Types
-import { MongooseValidatorType } from "types/app-type"
+import { MongooseValidatorType } from "../types/app-type"
 
 
 export default (errors: any , keyValue: any): any => {
