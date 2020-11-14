@@ -3,7 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 // Controllers
-import {UserController} from './controllers'
+import {UserController, DialogController} from './controllers'
 
 
 // Global const
@@ -13,15 +13,18 @@ const port = 8000
 mongoose.connect('mongodb://localhost:27017/socket', {useNewUrlParser: true, useCreateIndex: true}).then()
 app.use(bodyParser.json())
 
-
 const User = new UserController()
+const Dialog = new DialogController()
 
+// Users
 app.post('/user/register', User.register)
 app.post('/user/login', User.login)
 app.put('/user', User.update)
 app.delete('/user/:id', User.delete)
 app.get('/user/:id', User.index)
 app.get('/user', User.show)
+// Dialog
+app.get('/dialog/:id', Dialog.index)
 
 
 app.listen(port, () => {
