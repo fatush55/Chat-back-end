@@ -4,7 +4,7 @@ import {UserModel} from '../models'
 import {responseApi, setErrorMongoose} from "../utils"
 // Types
 import {Response, Request} from 'express'
-import {UserType,} from '../types/user-type'
+import {UserType, RegisterReq} from '../types/user-type'
 import {CodeStatusType} from '../types/app-type'
 
 
@@ -32,7 +32,7 @@ export default class User {
         }
     }
 
-    update = async (req: Request, res: Response) => {
+    update = async (req: Request<RegisterReq>, res: Response) => {
         const {id, ...updateData} = req.body
 
         try {
