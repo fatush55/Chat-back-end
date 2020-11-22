@@ -23,8 +23,6 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: 'Password is required',
-        maxlength: [40, 'Max length 40 symbols'],
-        minlength: [5, 'Min length 5 symbols'],
     },
     confirmed: {
         type: Boolean,

@@ -1,7 +1,8 @@
 // Models
 import {UserModel} from '../models'
+import {hash as setHash, compare} from 'bcryptjs'
 // Utils
-import {responseApi, setErrorMongoose} from "../utils"
+import {responseApi, setErrorMongoose, setErrors} from "../utils"
 // Types
 import {Response, Request} from 'express'
 import {UserType, RegisterReq} from '../types/user-type'
@@ -10,25 +11,33 @@ import {CodeStatusType} from '../types/app-type'
 
 export default class User {
     register = async (req: Request, res: Response) => {
-        const dataReq = {
-            email: req.body.email,
-            password: req.body.password,
-            full_name: req.body.full_name,
-        } as UserType
+        await setErrors(req, res)
 
-        const user = new UserModel(dataReq)
+        const hash = await setHash(req.body.password, 10)
 
         try {
-            const data = await user.save()
+            const user = await UserModel.findOne({email: req.body.email})
 
-            res.json(responseApi<UserType>(data, CodeStatusType.success, 'ok'))
+            if (!user) {
+                const user = new UserModel({
+                    email: req.body.email,
+                    password: hash,
+                    full_name: req.body.full_name,
+                }  as UserType)
+
+                try {
+                    const data = await user.save()
+
+                    res.json(responseApi<UserType>(data, CodeStatusType.success, 'ok'))
+                } catch (err) {
+                    res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
+                }
+            } else {
+                res.json(responseApi({email: 'This email use'}, CodeStatusType.not_valid, 'Something went wrong'))
+            }
+
         } catch (err) {
-            if (err.keyValue?.email) err.keyValue.email = 'This email use'
-
-            const error = setErrorMongoose(err.errors, err.keyValue)
-
-            if (error) res.json(responseApi(error, CodeStatusType.not_valid, 'no valid'))
-            else res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
+            res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
         }
     }
 
@@ -61,12 +70,28 @@ export default class User {
         }
     }
 
-    login = (req: Request, res: Response) => {
-        const dataReq = {
-            email: req.body.email,
-            password: req.body.password,
-        } as UserType
+    login = async (req: Request, res: Response) => {
+        await setErrors(req, res)
 
+        try {
+            const user = await UserModel.findOne({email: req.body.email})
+
+            if (user) {
+                const pas = await compare(req.body.password, user.password)
+
+                if (pas) {
+                    res.json(responseApi<any>(user, CodeStatusType.success, 'ok'))
+                } else {
+                    res.json(responseApi<any>({email: 'not valid', password: 'not valid'}, CodeStatusType.not_valid, 'not valid'))
+                }
+
+            } else {
+                res.json(responseApi<any>({email: 'not valid', password: 'not valid'}, CodeStatusType.not_valid, 'not valid'))
+            }
+
+        } catch (err) {
+            res.json(responseApi<any>({email: 'not valid', password: 'not valid'}, CodeStatusType.not_valid, 'not valid'))
+        }
     }
 
     logout = (req: Request, res: Response) => {
