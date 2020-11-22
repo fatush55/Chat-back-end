@@ -31,7 +31,7 @@ const UserSchema = new Schema({
         default: false,
     },
     confirm_hash: String,
-    last_time: Date,
+    last_seen: Date,
 }, {
     timestamps: true,
 })

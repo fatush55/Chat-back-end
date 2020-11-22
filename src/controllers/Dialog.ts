@@ -65,6 +65,7 @@ export default class Dialog {
     update = async (req: Request, res: Response) => {
 
     }
+
     delete = async (req: Request<DeleteReq>, res: Response) => {
         const dialogId = req.params.dialog_id
 
@@ -84,7 +85,6 @@ export default class Dialog {
         } catch (err) {
             res.json(responseApi({}, CodeStatusType.error, 'Dialog not found'))
         }
-
     }
 
     index = async (req: Request, res: Response) => {
