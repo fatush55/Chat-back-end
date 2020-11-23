@@ -93,7 +93,6 @@ export default class Dialog {
 
     show = async (req: Request<ShowReq>, res: Response) => {
         const userId = req.params.user_id
-
         try {
             const data = await DialogModel
                 .find({users_id: {$elemMatch: {$eq: userId}}}, {"users_id]": 0})

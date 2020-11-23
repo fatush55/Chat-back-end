@@ -11,6 +11,8 @@ export interface UserType extends Document{
     password: string
     confirmed: string
     confirm_hash: string
+    access_token: string
+    refresh_token: string
 }
 
 export interface RegisterReq {

@@ -1,6 +1,8 @@
 // Models
 import {UserModel} from '../models'
 import {hash as setHash, compare} from 'bcryptjs'
+import {sign} from 'jsonwebtoken'
+import {config} from '../config'
 // Utils
 import {responseApi, setErrorMongoose, setErrors} from "../utils"
 // Types
@@ -79,8 +81,31 @@ export default class User {
             if (user) {
                 const pas = await compare(req.body.password, user.password)
 
+
                 if (pas) {
-                    res.json(responseApi<any>(user, CodeStatusType.success, 'ok'))
+                    const {ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE} = config
+
+                    const accessToken = sign( {email: req.body.email}, ACCESS_TOKEN_SECRET, {
+                        algorithm: "HS256",
+                        expiresIn: ACCESS_TOKEN_LIFE,
+                    })
+
+                    const refreshToken = sign({email: req.body.email}, REFRESH_TOKEN_SECRET, {
+                        algorithm: "HS256",
+                        expiresIn: REFRESH_TOKEN_LIFE,
+                    })
+
+                    try {
+                        await UserModel.findByIdAndUpdate(user._id, {
+                            access_token: accessToken,
+                            refresh_token: refreshToken,
+                        })
+
+                        res.json(responseApi<any>({access_token: accessToken, refresh_token: refreshToken}, CodeStatusType.success, 'ok'))
+                    } catch (err) {
+                        res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
+                    }
+
                 } else {
                     res.json(responseApi<any>({email: 'not valid', password: 'not valid'}, CodeStatusType.not_valid, 'not valid'))
                 }
