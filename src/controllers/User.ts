@@ -6,13 +6,13 @@ import {config} from '../config'
 // Utils
 import {responseApi, setErrorMongoose, setErrors} from "../utils"
 // Types
-import {Response, Request} from 'express'
+import {Response} from 'express'
 import {UserType, RegisterReq} from '../types/user-type'
-import {CodeStatusType} from '../types/app-type'
+import {CodeStatusType, RequestUser} from '../types/app-type'
 
 
 export default class User {
-    register = async (req: Request, res: Response) => {
+    register = async (req: RequestUser, res: Response) => {
         await setErrors(req, res)
 
         const hash = await setHash(req.body.password, 10)
@@ -43,7 +43,7 @@ export default class User {
         }
     }
 
-    update = async (req: Request<RegisterReq>, res: Response) => {
+    update = async (req: RequestUser<RegisterReq>, res: Response) => {
         const {id, ...updateData} = req.body
 
         try {
@@ -60,7 +60,7 @@ export default class User {
         }
     }
 
-    delete = async (req: Request, res: Response) => {
+    delete = async (req: RequestUser, res: Response) => {
         const id = req.params.id
 
         try {
@@ -72,7 +72,7 @@ export default class User {
         }
     }
 
-    login = async (req: Request, res: Response) => {
+    login = async (req: RequestUser, res: Response) => {
         await setErrors(req, res)
 
         try {
@@ -85,7 +85,7 @@ export default class User {
                 if (pas) {
                     const {ACCESS_TOKEN_SECRET, ACCESS_TOKEN_LIFE, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_LIFE} = config
 
-                    const accessToken = sign( {email: req.body.email}, ACCESS_TOKEN_SECRET, {
+                    const accessToken = sign( {id: user._id, email: req.body.email}, ACCESS_TOKEN_SECRET, {
                         algorithm: "HS256",
                         expiresIn: ACCESS_TOKEN_LIFE,
                     })
@@ -97,7 +97,6 @@ export default class User {
 
                     try {
                         await UserModel.findByIdAndUpdate(user._id, {
-                            access_token: accessToken,
                             refresh_token: refreshToken,
                         })
 
@@ -119,19 +118,19 @@ export default class User {
         }
     }
 
-    logout = (req: Request, res: Response) => {
+    logout = (req: RequestUser, res: Response) => {
 
     }
 
-    auth = (req: Request, res: Response) => {
+    auth = (req: RequestUser, res: Response) => {
 
     }
 
-    avatar = (req: Request, res: Response) => {
+    avatar = (req: RequestUser, res: Response) => {
 
     }
 
-    show = async (req: Request, res: Response) => {
+    show = async (req: RequestUser, res: Response) => {
         try {
             const data = await UserModel.find()
 
@@ -141,7 +140,7 @@ export default class User {
         }
     }
 
-    index = async (req: Request, res: Response) => {
+    index = async (req: RequestUser, res: Response) => {
         const id  = req.params.id
 
         try {

@@ -1,3 +1,8 @@
+// Types
+import {Request} from "express"
+import * as core from "express-serve-static-core";
+
+
 export enum CodeStatusType  {
     success = 200,
     not_auth = 401,
@@ -14,4 +19,15 @@ export interface MongooseValidatorType {
         path: string
         value: string
     }
+}
+
+export interface RequestUser<P = core.ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = core.Query> extends Request<P, ResBody, ReqBody, ReqQuery> {
+    user?: ReqUserType
+}
+
+export type ReqUserType = {
+    id: number
+    email: string
+    iat: number,
+    exp: number
 }

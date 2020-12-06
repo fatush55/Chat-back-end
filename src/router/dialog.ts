@@ -7,7 +7,7 @@ import {DialogController} from "../controllers"
 const dialogRouter =  (app: Express) => {
     const Dialog = new DialogController()
 
-    app.get('/dialogs/:user_id', Dialog.show)
+    app.get('/dialogs', Dialog.show)
     app.post('/dialog/create', Dialog.create)
     app.delete('/dialog/delete/:dialog_id', Dialog.delete)
 }

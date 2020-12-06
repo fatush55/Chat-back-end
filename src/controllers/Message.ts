@@ -3,14 +3,14 @@ import {DialogModel, MessageModel} from '../models'
 // Utils
 import {responseApi, setErrorMongoose} from "../utils"
 // Types
-import {Response, Request} from 'express'
-import {CodeStatusType} from '../types/app-type'
+import {Response} from 'express'
+import {CodeStatusType, RequestUser} from '../types/app-type'
 import {MessageType, ShowReq, CreateReq, DeleteReq} from '../types/message-type'
 import {DialogType} from "../types/dialog-type"
 
 
 export default class Message {
-    create = async (req: Request<CreateReq>, res: Response) => {
+    create = async (req: RequestUser<CreateReq>, res: Response) => {
         const dataReq = {
             dialog_id: req.body.dialog_id,
             user_id: req.body.user_id,
@@ -41,11 +41,11 @@ export default class Message {
         }
     }
 
-    update = async (req: Request, res: Response) => {
+    update = async (req: RequestUser, res: Response) => {
 
     }
 
-    delete = async (req: Request<DeleteReq>, res: Response) => {
+    delete = async (req: RequestUser<DeleteReq>, res: Response) => {
         const dialogId = req.params.message_id
 
         try {
@@ -73,7 +73,7 @@ export default class Message {
 
     }
 
-    show = async (req: Request<ShowReq>, res: Response) => {
+    show = async (req: RequestUser<ShowReq>, res: Response) => {
         const dialogId = req.params.dialog_id
 
         try {

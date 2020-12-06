@@ -3,14 +3,14 @@ import {DialogModel, MessageModel} from '../models'
 // Utils
 import {responseApi, setErrorMongoose} from "../utils"
 // Types
-import {Response, Request} from 'express'
-import {CodeStatusType} from '../types/app-type'
+import {Response} from 'express'
+import {CodeStatusType, RequestUser} from '../types/app-type'
 import {DialogType, DeleteReq, ShowReq} from '../types/dialog-type'
 import {MessageType} from '../types/message-type'
 
 
 export default class Dialog {
-    create = async (req: Request, res: Response) => {
+    create = async (req: RequestUser, res: Response) => {
         // Create Dialog
         const dataReqDialog = {
             admin_id: req.body.admin_id,
@@ -62,11 +62,11 @@ export default class Dialog {
         }
     }
 
-    update = async (req: Request, res: Response) => {
+    update = async (req: RequestUser, res: Response) => {
 
     }
 
-    delete = async (req: Request<DeleteReq>, res: Response) => {
+    delete = async (req: RequestUser<DeleteReq>, res: Response) => {
         const dialogId = req.params.dialog_id
 
         try {
@@ -87,15 +87,14 @@ export default class Dialog {
         }
     }
 
-    index = async (req: Request, res: Response) => {
+    index = async (req: RequestUser, res: Response) => {
 
     }
 
-    show = async (req: Request<ShowReq>, res: Response) => {
-        const userId = req.params.user_id
+    show = async (req: RequestUser, res: Response) => {
         try {
             const data = await DialogModel
-                .find({users_id: {$elemMatch: {$eq: userId}}}, {"users_id]": 0})
+                .find({users_id: {$elemMatch: {$eq: req.user?.id}}}, {"users_id]": 0})
                 .populate(["admin_id", "users_id", "last_message"])
 
             res.json(responseApi<any>(data, CodeStatusType.success, 'ok'))
