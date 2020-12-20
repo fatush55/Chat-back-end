@@ -13,6 +13,8 @@ import {CodeStatusType, RequestUser} from '../types/app-type'
 
 export default class User {
     register = async (req: RequestUser, res: Response) => {
+        console.log('RR')
+
         await setErrors(req, res)
 
         const hash = await setHash(req.body.password, 10)
@@ -131,10 +133,12 @@ export default class User {
     }
 
     show = async (req: RequestUser, res: Response) => {
-        try {
-            const data = await UserModel.find()
+        const userId  = req.user?.id
 
-            res.json(responseApi<any>({items: [data]}, CodeStatusType.success, 'ok'))
+        try {
+            const data = await UserModel.find({},{_id: 1, avatar: 1, email: 1, full_name: 1, createdAt: 1, updatedAt: 1})
+
+            res.json(responseApi<any>({items: [...data.filter(elem => elem._id != userId)]}, CodeStatusType.success, 'ok'))
         } catch (error) {
             res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
         }

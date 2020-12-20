@@ -13,7 +13,7 @@ const userRouter =  (app: Express) => {
     app.put('/user', User.update)
     app.delete('/user/:id', User.delete)
     app.get('/user/:id', User.index)
-    app.get('/user', User.show)
+    app.get('/users', User.show)
 }
 
 export default userRouter

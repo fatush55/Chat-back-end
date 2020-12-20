@@ -12,9 +12,10 @@ import {MessageType} from '../types/message-type'
 export default class Dialog {
     create = async (req: RequestUser, res: Response) => {
         // Create Dialog
+
         const dataReqDialog = {
-            admin_id: req.body.admin_id,
-            users_id: [req.body.admin_id, req.body.user_id],
+            admin:  req.user?.id,
+            users: [req.user?.id, req.body.user_id],
         } as DialogType
 
         const dialog = new DialogModel(dataReqDialog)
@@ -94,10 +95,13 @@ export default class Dialog {
     show = async (req: RequestUser, res: Response) => {
         try {
             const data = await DialogModel
-                .find({users_id: {$elemMatch: {$eq: req.user?.id}}}, {"users_id]": 0})
-                .populate(["admin_id", "users_id", "last_message"])
+                .find({users: {$elemMatch: {$eq: req.user?.id}}}, {__v: 0})
+                .populate({path: 'admin', select: ['email', 'full_name', 'avatar', 'createdAt', 'updatedAt']})
+                .populate({path: 'users', select: ['email', 'full_name', 'avatar', 'createdAt', 'updatedAt']})
+                .populate({path: 'last_message', select: ['read', 'text', 'avatar', 'createdAt', 'updatedAt']})
 
-            res.json(responseApi<any>(data, CodeStatusType.success, 'ok'))
+
+            res.json(responseApi<any>({items: data}, CodeStatusType.success, 'ok'))
         } catch (err) {
             res.json(responseApi({}, CodeStatusType.error, 'Something went wrong'))
         }

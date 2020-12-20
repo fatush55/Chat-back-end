@@ -15,6 +15,7 @@ export default async  (
     const {ACCESS_TOKEN_SECRET, EXCEPTION_JWT_PATH} = config
     const accessToken = req.headers.access_token
 
+
     if (!EXCEPTION_JWT_PATH.includes(req.path)) {
         if (typeof accessToken === 'string') {
             try {

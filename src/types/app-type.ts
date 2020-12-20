@@ -1,6 +1,7 @@
 // Types
 import {Request} from "express"
 import * as core from "express-serve-static-core";
+import {Schema} from "mongoose";
 
 
 export enum CodeStatusType  {
@@ -26,7 +27,7 @@ export interface RequestUser<P = core.ParamsDictionary, ResBody = any, ReqBody =
 }
 
 export type ReqUserType = {
-    id: number
+    id: Schema.Types.ObjectId
     email: string
     iat: number,
     exp: number

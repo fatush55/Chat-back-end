@@ -6,11 +6,11 @@ import {DialogType} from '../types/dialog-type'
 
 
 const DialogSchema = new Schema({
-    admin_id: {
+    admin: {
         type: Schema.Types.ObjectId,
         ref: 'User',
     },
-    users_id: [{
+    users: [{
         type: Schema.Types.ObjectId,
         ref: "User"
     }],
