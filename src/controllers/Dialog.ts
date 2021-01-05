@@ -39,11 +39,15 @@ export default class Dialog {
                 } as DialogType
 
                 try {
-                    const dialogUpdate = await DialogModel
-                        .findByIdAndUpdate(dialog._id, dataReqDialogUpdate)
-                        .populate(["admin_id", "users_id"])
+                    await DialogModel.findByIdAndUpdate(dialog._id, dataReqDialogUpdate)
 
-                    res.json(responseApi<any>(dialogUpdate, CodeStatusType.success, 'ok'))
+                    const data = await DialogModel
+                        .find({_id: dialog._id}, {__v: 0})
+                        .populate({path: 'admin', select: ['email', 'full_name', 'avatar', 'createdAt', 'updatedAt']})
+                        .populate({path: 'users', select: ['email', 'full_name', 'avatar', 'createdAt', 'updatedAt']})
+                        .populate({path: 'last_message', select: ['read', 'text', 'avatar', 'createdAt', 'updatedAt']})
+
+                    res.json(responseApi<any>({...data}, CodeStatusType.success, 'ok'))
                 } catch (err) {
                     await DialogModel.findByIdAndDelete(dialogSave._id)
                     await MessageModel.findByIdAndDelete(messageSave._id)
