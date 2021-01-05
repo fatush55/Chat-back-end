@@ -47,6 +47,7 @@ export default class Dialog {
                         .populate({path: 'users', select: ['email', 'full_name', 'avatar', 'createdAt', 'updatedAt']})
                         .populate({path: 'last_message', select: ['read', 'text', 'avatar', 'createdAt', 'updatedAt']})
 
+
                     res.json(responseApi<any>({...data}, CodeStatusType.success, 'ok'))
                 } catch (err) {
                     await DialogModel.findByIdAndDelete(dialogSave._id)
