@@ -30,14 +30,6 @@ const UserSchema = new Schema({
     },
     confirm_hash: String,
     last_seen: Date,
-    access_token: {
-        type: String,
-        default: null
-    },
-    refresh_token: {
-        type: String,
-        default: null
-    },
 }, {
     timestamps: true,
 })

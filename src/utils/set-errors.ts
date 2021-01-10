@@ -1,7 +1,7 @@
 // Core
 import {ValidationError, validationResult} from "express-validator"
 import {Request, Response} from "express"
-import {responseApi} from "./index";
+import {responseApi} from "./index"
 import {CodeStatusType} from "../types/app-type"
 
 

@@ -1,7 +1,7 @@
 // Types
 import {Request} from "express"
 import * as core from "express-serve-static-core";
-import {Schema} from "mongoose";
+import {Document, Schema} from "mongoose";
 
 
 export enum CodeStatusType  {
@@ -24,11 +24,24 @@ export interface MongooseValidatorType {
 
 export interface RequestUser<P = core.ParamsDictionary, ResBody = any, ReqBody = any, ReqQuery = core.Query> extends Request<P, ResBody, ReqBody, ReqQuery> {
     user?: ReqUserType
+    token?: string
 }
 
 export type ReqUserType = {
     id: Schema.Types.ObjectId
     email: string
-    iat: number,
+    iat: number
     exp: number
+}
+
+export interface CreateUpdateType {
+    createdAt: Date
+    updatedAt: Date
+}
+
+export interface BlackListTokenType extends Document {
+    _id: Schema.Types.ObjectId
+    token: string
+    time: number
+    __v: number
 }

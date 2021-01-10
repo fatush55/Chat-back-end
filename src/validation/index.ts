@@ -1,2 +1,2 @@
-export {default as loginValid} from './login'
-export {default as registerValid} from './register'
+export {default as loginValid} from './signin'
+export {default as registerValid} from './signup'

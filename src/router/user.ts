@@ -8,8 +8,12 @@ import {loginValid, registerValid} from '../validation'
 
 const userRouter =  (app: Express) => {
     const User = new UserController()
-    app.post('/user/register', registerValid, User.register)
-    app.post('/user/login', loginValid, User.login)
+
+    app.post('/user/signup', registerValid, User.signup)
+    app.post('/user/signin', loginValid, User.signin)
+    app.get('/user/identification', User.identification)
+    app.get('/user/logout', User.logout)
+
     app.put('/user', User.update)
     app.delete('/user/:id', User.delete)
     app.get('/user/:id', User.index)

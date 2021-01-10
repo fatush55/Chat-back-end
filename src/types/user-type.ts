@@ -1,9 +1,9 @@
 // Types
 import {Document, Schema} from 'mongoose'
-import {MongooseValidatorType} from './app-type'
+import {CreateUpdateType, MongooseValidatorType} from './app-type'
 
 
-export interface UserType extends Document{
+export interface UserType extends Document, CreateUpdateType {
     _id: Schema.Types.ObjectId
     email: string
     avatar?: string
@@ -11,8 +11,6 @@ export interface UserType extends Document{
     password: string
     confirmed: string
     confirm_hash: string
-    access_token: string
-    refresh_token: string
 }
 
 export interface RegisterReq {

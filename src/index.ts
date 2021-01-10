@@ -5,9 +5,9 @@ import bodyParser from 'body-parser'
 import {createServer} from 'http'
 import socket from 'socket.io'
 import cors from 'cors'
-import {config} from './config'
+import {config} from './utils'
 // Middleware
-import {updateLastSeen, checkJWT} from './middleware'
+import {updateLastSeen, checkJWT, logger} from './middleware'
 // Router
 import {rootRouter} from './router'
 
@@ -18,8 +18,10 @@ const http = createServer(app)
 const io = socket(http)
 const {PORT} = config
 // Middleware
+
 app.use(cors())
 app.use(bodyParser.json())
+app.use(logger)
 app.use(checkJWT)
 app.use(updateLastSeen)
 // Db
@@ -31,10 +33,6 @@ mongoose.connect('mongodb://localhost:27017/socket', {
 }).then()
 // Router
 rootRouter(app)
-
-app.get('/index', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-});
 
 io.on('connection', (socket: any) => {
     // console.log(socket)
